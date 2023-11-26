@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:devfest_hackaton/constants.dart';
-import 'package:devfest_hackaton/views/GoogleMapScreen.dart';
+import 'package:devfest_hackaton/views/google_map_screen.dart';
 import 'package:devfest_hackaton/utils/rive_utils.dart';
 import 'package:devfest_hackaton/views/historique_screen.dart';
 import 'package:devfest_hackaton/views/search_screen.dart';

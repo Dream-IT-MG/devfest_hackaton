@@ -1,12 +1,13 @@
-// ignore_for_file: file_names
-
-import 'package:devfest_hackaton/directions_repository.dart';
+import 'package:devfest_hackaton/repository/directions_repository.dart';
 import 'package:devfest_hackaton/widgets/StoreCard.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:devfest_hackaton/models/directions_model.dart';
 
-import '../directions_model.dart';
+double INITIAL_LATITUDE = -18.8741133030216;
+double INITIAL_LONGITUDE = 47.49958330784587;
+double INITIAL_ZOOM = 12;
 
 class GoogleMapScreen extends StatefulWidget {
   const GoogleMapScreen({super.key});
@@ -18,13 +19,19 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   // State
   bool isLoading = true;
-  int selectedId = 0;
+  int selectedBusId = 0;
 
   // Map Controller
   late GoogleMapController mapController;
-  Marker? _origin = null;
-  Marker? _destination = null;
-  Directions? _info = null;
+
+  // Marker pour le point de départ
+  Marker? _origin;
+
+  // Marker pour le point d'arrivée
+  Marker? _destination;
+
+  // informations sur la direction a prendre
+  Directions? _infoDirection;
   List busList = [
     {
       "i": 0,
@@ -52,15 +59,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   // Custom Marker
   BitmapDescriptor marketIcon = BitmapDescriptor.defaultMarker;
 
-  //
-  static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(-18.8741133030216, 47.49958330784587),
-    zoom: 14,
+  // init the camera position
+  static CameraPosition INITIAL_POSITION = CameraPosition(
+    target: LatLng(INITIAL_LATITUDE, INITIAL_LONGITUDE),
+    zoom: INITIAL_ZOOM,
   );
 
   Position? _currentPosition;
 
   Future<void> _getCurrentPosition() async {
+    // demande autorisation d'acceder a la localisation de l'utilisateur
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) return;
     try {
@@ -175,7 +183,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             mapType: MapType.normal,
-            initialCameraPosition: _initialPosition,
+            initialCameraPosition: INITIAL_POSITION,
             padding: EdgeInsets.only(
               top: 50,
               bottom: MediaQuery.of(context).size.height / 2.5,
@@ -188,9 +196,9 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   CameraUpdate.newLatLngZoom(
                       LatLng(
                           _currentPosition?.latitude ??
-                              _initialPosition.target.latitude,
+                              INITIAL_POSITION.target.latitude,
                           _currentPosition?.longitude ??
-                              _initialPosition.target.longitude),
+                              INITIAL_POSITION.target.longitude),
                       14.5),
                 );
               });
@@ -200,19 +208,19 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               if (_destination != null) _destination!
             },
             polylines: {
-              if (_info != null)
+              if (_infoDirection != null)
                 Polyline(
                   polylineId: const PolylineId('overview_polyline'),
                   color: Colors.red,
                   width: 5,
-                  points: _info!.polylinePoints
+                  points: _infoDirection!.polylinePoints
                       .map((e) => LatLng(e.latitude, e.longitude))
                       .toList(),
                 )
             },
             onLongPress: _addMarker,
           ),
-          if (_info != null)
+          if (_infoDirection != null)
             Positioned(
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -230,7 +238,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                       )
                     ]),
                 child: Text(
-                  '${_info!.totalDistance}, ${_info!.totalDuration}',
+                  '${_infoDirection!.totalDistance}, ${_infoDirection!.totalDuration}',
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -276,10 +284,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                         id: 1,
                         onSelect: (int id) {
                           setState(() {
-                            selectedId = id;
+                            selectedBusId = id;
                           });
                         },
-                        isSelected: selectedId == bus['i'],
+                        isSelected: selectedBusId == bus['i'],
                       ),
                     ),
                     const SizedBox(
@@ -308,7 +316,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         _destination = null;
 
         // Reset info
-        _info = null;
+        _infoDirection = null;
       });
     } else {
       setState(() {
@@ -323,7 +331,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       final directions = await DirectionRepository()
           .getDirections(origin: _origin!.position, destination: pos);
       setState(() {
-        _info = directions;
+        _infoDirection = directions;
       });
     }
   }
