@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:devfest_hackaton/constants.dart';
 import 'package:devfest_hackaton/views/GoogleMapScreen.dart';
-import 'package:devfest_hackaton/utils/colors.dart';
 import 'package:devfest_hackaton/utils/rive_utils.dart';
 import 'package:devfest_hackaton/views/historique_screen.dart';
 import 'package:devfest_hackaton/views/search_screen.dart';
@@ -72,7 +71,7 @@ class _EntryPointState extends State<EntryPoint>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkPrimary,
+      backgroundColor: const Color(0xFF17203A),
       resizeToAvoidBottomInset: false,
       extendBody: true,
       body: Stack(

@@ -1,14 +1,19 @@
 import 'package:devfest_hackaton/utils/colors.dart';
 import 'package:devfest_hackaton/utils/fontsize.dart';
+import 'package:devfest_hackaton/viewmodels/search_viewmodels.dart';
 import 'package:devfest_hackaton/widgets/text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SearchViewModels searchViewModels = Provider.of(context);
+
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -22,105 +27,61 @@ class SearchScreen extends StatelessWidget {
                   const SizedBox(
                     height: 200,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(children: [
-                      const Icon(Icons.business),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Column(
-                        children: [
-                          AppText(
-                            "Nom de l'arret en question",
-                            isBold: true,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          AppText("prochain bus dans 15 min"),
-                        ],
-                      ),
-                      const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          // ajouter dans la liste des enregistrements
-                        },
-                        child: const Icon(Icons.schedule),
-                      ),
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(children: [
-                      const Icon(Icons.business),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Column(
-                        children: [
-                          AppText(
-                            "Nom de l'arret en question",
-                            isBold: true,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          AppText("prochain bus dans 15 min"),
-                        ],
-                      ),
-                      const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          // ajouter dans la liste des enregistrements
-                        },
-                        child: const Icon(Icons.schedule),
-                      ),
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(children: [
-                      const Icon(Icons.business),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Column(
-                        children: [
-                          AppText(
-                            "Nom de l'arret en question",
-                            isBold: true,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          AppText("prochain bus dans 15 min"),
-                        ],
-                      ),
-                      const Expanded(child: SizedBox()),
-                      GestureDetector(
-                        onTap: () {
-                          // ajouter dans la liste des enregistrements
-                        },
-                        child: const Icon(Icons.schedule),
-                      ),
-                    ]),
-                  ),
+                  ...searchViewModels
+                      .getFilteredStations()
+                      .map(
+                        (station) => Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  border: Border.all(color: AppColors.primary),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Row(children: [
+                                const Icon(
+                                  Iconsax.building,
+                                  color: AppColors.primary,
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      station.name,
+                                      isBold: true,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    AppText(
+                                        "prochain bus vers ${station.heureArrive}"),
+                                  ],
+                                ),
+                                const Expanded(child: SizedBox()),
+                                GestureDetector(
+                                  onTap: () {
+                                    searchViewModels
+                                        .toogleStationNotified(station);
+                                  },
+                                  child: Icon(
+                                    station.isNotified
+                                        ? Icons.notifications
+                                        : Icons.notifications_none,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ]),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList()
                 ],
               ),
             ),
@@ -142,18 +103,23 @@ class SearchScreen extends StatelessWidget {
                         offset: Offset(0, 3))
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Rechercher',
+                      child: TextFormField(
+                        controller: searchViewModels.query,
+                        onChanged: (newText) {
+                          searchViewModels.updateQuery(newText);
+                        },
+                        decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: AppColors.white,
+                          hintText: 'Rechercher votre arrêt ici...',
                           hintStyle: TextStyle(
-                            fontSize: AppFontSize.medium,
+                            fontSize: AppFontSize.large,
                           ),
                           labelStyle: TextStyle(
-                            fontSize: AppFontSize.medium,
+                            fontSize: AppFontSize.large,
                           ),
                         ),
                       ),

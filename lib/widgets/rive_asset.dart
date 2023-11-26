@@ -26,14 +26,6 @@ List<RiveAsset> bottomNavs = [
       artboard: "TIMER",
       stateMachineName: "TIMER_Interactivity",
       title: "Chat"),
-  RiveAsset("assets/animations/icons.riv",
-      artboard: "BELL",
-      stateMachineName: "BELL_Interactivity",
-      title: "Notifications"),
-  RiveAsset("assets/animations/icons.riv",
-      artboard: "USER",
-      stateMachineName: "USER_Interactivity",
-      title: "Profile"),
 ];
 
 List<RiveAsset> sideMenus = [

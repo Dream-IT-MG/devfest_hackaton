@@ -116,7 +116,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               Stack(
                 children: [
                   Container(
-                    color: const Color(0xFFf89c32),
+                    color: AppColors.secondary,
                     width: double.maxFinite,
                     height: double.maxFinite,
                     child: Column(
@@ -151,7 +151,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
-                                    color: const Color(0xFFf89c32),
+                                    color: AppColors.secondary,
                                     height: 50,
                                     width: double.maxFinite,
                                   ),
@@ -206,7 +206,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                    "Viite",
+                                    "BUS-NAY",
                                     style: TextStyle(
                                       fontSize: 60,
                                       fontFamily: "Poppins",
