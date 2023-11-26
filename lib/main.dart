@@ -1,5 +1,5 @@
 import 'package:devfest_hackaton/viewmodels/search_viewmodels.dart';
-import 'package:devfest_hackaton/views/on_boarding_screen.dart';
+import 'package:devfest_hackaton/views/on_boarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const OnBoardingScreen(),
+        home: const OnBoardingView(),
       ),
     );
   }

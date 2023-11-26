@@ -18,10 +18,12 @@ class Station {
   factory Station.fromJson(Map<String, dynamic> json) => Station(
         name: json["name"],
         heureArrive: json["heure_arrive"],
+        isNotified: json["is_notified"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "heure_arrive": heureArrive,
+        "is_notified": isNotified,
       };
 }

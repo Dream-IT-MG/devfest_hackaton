@@ -48,7 +48,7 @@ class _SideMenuState extends State<SideMenu> {
                     // Let me show you if user click on the menu how to show the animation
                     StateMachineController controller =
                         RiveUtils.getRiveController(artboard,
-                            stateMachineName: menu.stateMachineName);
+                            stateMachineName: menu.stateMachineName)!;
                     menu.input = controller.findSMI("active") as SMIBool;
                     // See as we click them it start animate
                   },

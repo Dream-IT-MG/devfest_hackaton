@@ -1,9 +1,13 @@
+// ignore_for_file: file_names
+
 import 'package:devfest_hackaton/repository/directions_repository.dart';
 import 'package:devfest_hackaton/widgets/bus_card.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:devfest_hackaton/models/directions_model.dart';
+
+import '../models/directions_model.dart';
 
 double INITIAL_LATITUDE = -18.8741133030216;
 double INITIAL_LONGITUDE = 47.49958330784587;
@@ -12,14 +16,14 @@ double FOCUS_ZOOM = 14.5;
 double VITESSE_DE_DEPLACEMENT_ZOOM = 50.0;
 double CONTENU_HEIGHT_DIVIDER = 2.5;
 
-class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({super.key});
+class GoogleMapView extends StatefulWidget {
+  const GoogleMapView({super.key});
 
   @override
-  State<GoogleMapScreen> createState() => _GoogleMapScreenState();
+  State<GoogleMapView> createState() => _GoogleMapViewState();
 }
 
-class _GoogleMapScreenState extends State<GoogleMapScreen> {
+class _GoogleMapViewState extends State<GoogleMapView> {
   // State
   bool isLoading = true;
   int selectedBusId = 0;

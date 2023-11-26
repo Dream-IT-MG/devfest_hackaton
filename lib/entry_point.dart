@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:devfest_hackaton/constants.dart';
-import 'package:devfest_hackaton/views/google_map_screen.dart';
+import 'package:devfest_hackaton/views/google_map_view.dart';
 import 'package:devfest_hackaton/utils/rive_utils.dart';
-import 'package:devfest_hackaton/views/historique_screen.dart';
-import 'package:devfest_hackaton/views/search_screen.dart';
+import 'package:devfest_hackaton/views/historique_view.dart';
+import 'package:devfest_hackaton/views/search_view.dart';
 import 'package:devfest_hackaton/widgets/animated_bar.dart';
 import 'package:devfest_hackaton/widgets/menu_btn.dart';
 import 'package:devfest_hackaton/widgets/rive_asset.dart';
@@ -59,11 +59,11 @@ class _EntryPointState extends State<EntryPoint>
   }
 
   final List<Widget> pages = [
-    GoogleMapScreen(),
-    SearchScreen(),
-    HistoriqueScreen(),
-    SearchScreen(),
-    HistoriqueScreen(),
+    GoogleMapView(),
+    SearchView(),
+    HistoriqueView(),
+    SearchView(),
+    HistoriqueView(),
   ];
 
   int selectedPage = 0;

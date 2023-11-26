@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+class SearchView extends StatelessWidget {
+  const SearchView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class SearchScreen extends StatelessWidget {
                                 GestureDetector(
                                   onTap: () {
                                     searchViewModels
-                                        .toogleStationNotified(station);
+                                        .toggleStationNotified(station);
                                   },
                                   child: Icon(
                                     station.isNotified
@@ -124,7 +124,7 @@ class SearchScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       CupertinoIcons.search,
                       size: 20,
                       color: AppColors.primary,
