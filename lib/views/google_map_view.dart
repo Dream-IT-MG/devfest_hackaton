@@ -1,11 +1,13 @@
 // ignore_for_file: file_names
 
 import 'package:devfest_hackaton/repository/directions_repository.dart';
+import 'package:devfest_hackaton/viewmodels/google_map_viewmodels.dart';
 import 'package:devfest_hackaton/widgets/bus_card.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:devfest_hackaton/models/directions_model.dart';
+import 'package:provider/provider.dart';
 
 import '../models/directions_model.dart';
 
@@ -36,31 +38,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   // informations sur la direction a prendre
   Directions? _infoDirection;
-  List busList = [
-    {
-      "i": 0,
-      "id": "139",
-      "arret": "Analakely",
-      "heureArrivee": "13h40",
-      "prochaineArrivee": "14h",
-    },
-    {
-      "i": 1,
-      "id": "127",
-      "arret": "Mahamasina",
-      "heureArrivee": "13h36",
-      "prochaineArrivee": "13h55",
-    },
-    {
-      "i": 2,
-      "id": "015",
-      "arret": "Ambohijatovo",
-      "heureArrivee": "13h55",
-      "prochaineArrivee": "13h59",
-    }
-  ];
-
-  // Custom Marker
   BitmapDescriptor marketIcon = BitmapDescriptor.defaultMarker;
 
   // init the camera position
@@ -138,6 +115,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   Widget build(BuildContext context) {
+    GoogleMapViewModels googleMapViewModels = Provider.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -148,9 +126,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         actions: [
           if (_origin != null)
             TextButton(
-              child: Text("ORIGIN"),
               style: TextButton.styleFrom(
-                  primary: Colors.green,
+                  foregroundColor: Colors.green,
                   textStyle: const TextStyle(fontWeight: FontWeight.w600)),
               onPressed: () => mapController.animateCamera(
                 CameraUpdate.newCameraPosition(
@@ -161,12 +138,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   ),
                 ),
               ),
+              child: const Text("ORIGIN"),
             ),
           if (_destination != null)
             TextButton(
-              child: Text('DEST'),
               style: TextButton.styleFrom(
-                  primary: Colors.blue,
+                  foregroundColor: Colors.blue,
                   textStyle: const TextStyle(fontWeight: FontWeight.w600)),
               onPressed: () => mapController.animateCamera(
                 CameraUpdate.newCameraPosition(
@@ -177,6 +154,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                   ),
                 ),
               ),
+              child: const Text('DEST'),
             )
         ],
       ),
@@ -275,15 +253,14 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 height: MediaQuery.of(context).size.height / 2.5,
                 child: ListView(
                   children: [
-                    ...busList.map(
+                    ...googleMapViewModels.buses.map(
                       (bus) => BusCard(
-                        name: "arrêt : ${bus['arret']}",
-                        heureOuverture:
-                            "heure d'arrivée : ${bus['heureArrivee']}",
+                        name: "Arrêt : ${bus.arret}",
+                        heureOuverture: "heure d'arrivée : ${bus.heureArrivee}",
                         dateOuverture:
-                            "prochaine arrivée : ${bus['prochaineArrivee']}",
+                            "prochaine arrivée : ${bus.prochaineArrivee}",
                         contact: "",
-                        image: bus['id'],
+                        image: bus.id,
                         longlat: "",
                         id: 1,
                         onSelect: (int id) {
