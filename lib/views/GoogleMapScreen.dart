@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:devfest_hackaton/directions_repository.dart';
+import 'package:devfest_hackaton/utils/colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -104,13 +105,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
-        onPressed: () => mapController.animateCamera(
-          _info != null
-              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-              : CameraUpdate.newCameraPosition(_initialPosition),
-        ),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          // ...
+        },
         child: const Icon(Icons.center_focus_strong),
       ),
       appBar: AppBar(

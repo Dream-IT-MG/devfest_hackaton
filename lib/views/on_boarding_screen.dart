@@ -25,12 +25,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   SMIInput<double>? inputValue1;
   StateMachineController? controller2;
   SMIInput<bool>? inputValue2;
-  List<String> third_title = [
-    "Humain\nintelligent",
-    "Humain\naccomplie",
-    "Humain\nqui sait ce qu'il fait dans la vie.",
-  ];
-  int selected_title = 0;
+  SMITrigger? _bump;
 
   void initState() {
     _btnAnimationColtroller = OneShotAnimation(
@@ -40,17 +35,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     startAnimation();
     Timer.periodic(Duration(seconds: (1 * 3) + 2), (timer) {
       startAnimation();
-    });
-    Timer.periodic(Duration(seconds: 2), (timer) {
-      if (selected_title < 2) {
-        setState(() {
-          selected_title += 1;
-        });
-      } else {
-        setState(() {
-          selected_title = 0;
-        });
-      }
     });
     super.initState();
   }
@@ -83,13 +67,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //  final fb = FirebaseDatabase.instanoce;
-    // final ref = fb.ref();
-    // // ref.child("Name").set("fooo");
-    // ref.child("Name").once().then((DatabaseEvent value) {
-    //   print(value.snapshot.value);
-    // });
-
     return Scaffold(
       body: Stack(
         children: [
@@ -97,7 +74,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             controller: _controller,
             children: [
               Container(
-                color: const Color.fromRGBO(195, 72, 84, 1),
+                color: const Color(0xff2ed2b6),
                 width: double.maxFinite,
                 height: double.maxFinite,
                 child: Stack(
@@ -105,20 +82,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.maxFinite,
                           height: MediaQuery.of(context).size.height / 1.5,
                           child: RiveAnimation.asset(
-                            "assets/animations/variation.riv",
+                            "assets/animations/switch-it-up.riv",
                             onInit: (artboard) {
                               controller2 = StateMachineController.fromArtboard(
                                 artboard,
-                                "State Machine 1",
+                                "Juicy",
                               );
                               if (controller2 != null) {
                                 artboard.addController(controller2!);
-                                inputValue2 = controller2?.findInput("break");
-                                inputValue2?.change(false);
+                                _bump = controller2!.findInput<bool>('Orange')
+                                    as SMITrigger;
                               }
                             },
                           ),
@@ -129,40 +106,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       ],
                     ),
                     const SlideText(
-                      title: "Fixez vos objectifs et suivez vos progrès",
+                      title: "Controllez votre temps",
                       description:
-                          "Définis tes objectifs, partage tes progrès et sois fière de ce que tu as accompli.",
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                color: const Color.fromRGBO(70, 46, 84, 1),
-                width: double.maxFinite,
-                height: double.maxFinite,
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              width: double.maxFinite,
-                              height: MediaQuery.of(context).size.height / 1.5,
-                              child: const RiveAnimation.asset(
-                                "assets/animations/rocket.riv",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SlideText(
-                      title_size: 40,
-                      title: "${third_title[selected_title]}",
-                      description:
-                          "Découvre qui tu es et choisi parmi les +100 formations à découvrir selon ta personnalité et ton choix de carriere.",
+                          "Ne vous prennez plus la tête à courrir après le bus.",
                     ),
                   ],
                 ),
@@ -170,7 +116,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               Stack(
                 children: [
                   Container(
-                    color: AppColors.primary,
+                    color: const Color(0xFFf89c32),
                     width: double.maxFinite,
                     height: double.maxFinite,
                     child: Column(
@@ -178,18 +124,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       children: [
                         Stack(
                           children: [
-                            Container(
+                            SizedBox(
                               width: double.maxFinite,
                               height: MediaQuery.of(context).size.height / 1.5,
                               child: RiveAnimation.asset(
-                                // "assets/animations/age.riv",
                                 "assets/animations/mixing_animations.riv",
                                 onInit: (artboard) {
                                   controller1 =
                                       StateMachineController.fromArtboard(
                                     artboard,
                                     "State Machine 1",
-                                    // "AgeClasses",
                                   );
                                   if (controller1 != null) {
                                     artboard.addController(controller1!);
@@ -200,14 +144,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 },
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: double.maxFinite,
                               height: MediaQuery.of(context).size.height / 1.5,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
-                                    color: AppColors.primary,
+                                    color: const Color(0xFFf89c32),
                                     height: 50,
                                     width: double.maxFinite,
                                   ),
@@ -220,9 +164,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                   ),
                   const SlideText(
-                    title: "Apprenez et grandissez",
+                    title: "Facilitez vos déplacement",
                     description:
-                        "Deviens une meilleure personne grâce à nos quiz et nos petits messages",
+                        "Petit ou grand, déplacez-vous librement vers votre déstination ",
                   ),
                 ],
               ),
@@ -262,7 +206,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                    "Learn design & code",
+                                    "Viite",
                                     style: TextStyle(
                                       fontSize: 60,
                                       fontFamily: "Poppins",
@@ -271,7 +215,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                   ),
                                   SizedBox(height: 16),
                                   Text(
-                                    "Don’t skip design. Learn design and code, by building real apps with Flutter and Swift. Complete courses about the best tools.",
+                                    "Trouvez facilement vos moyens de transport à travers notre application. Enregistrez vos iténeraire pour plus tards.",
                                   ),
                                 ],
                               ),
@@ -296,7 +240,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 24),
                               child: Text(
-                                "Purchase includes access to 30+ courses, 240+ premium tutorials, 120+ hours of videos, source files and certificates.",
+                                "",
                               ),
                             ),
                           ],
@@ -312,7 +256,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             alignment: const Alignment(0, 0.95),
             child: SmoothPageIndicator(
               controller: _controller,
-              count: 4,
+              count: 3,
               effect: const ExpandingDotsEffect(
                 dotColor: Colors.white54,
                 activeDotColor: Colors.white,
