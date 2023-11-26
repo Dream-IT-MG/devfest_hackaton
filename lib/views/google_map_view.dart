@@ -14,6 +14,9 @@ import '../models/directions_model.dart';
 double INITIAL_LATITUDE = -18.8741133030216;
 double INITIAL_LONGITUDE = 47.49958330784587;
 double INITIAL_ZOOM = 12;
+double FOCUS_ZOOM = 14.5;
+double VITESSE_DE_DEPLACEMENT_ZOOM = 50.0;
+double CONTENU_HEIGHT_DIVIDER = 2.5;
 
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({super.key});
@@ -65,16 +68,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     }
   }
 
-  void setCustomMarkerIcon() {
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/market_icon.png")
-        .then(
-      (icon) {
-        marketIcon = icon;
-      },
-    );
-  }
-
+  // verifie la permission à la localisation
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -84,7 +78,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-              'Le service de localisation est désactiver. Activer le service.')));
+              'Le service de localisation est désactivé. Activez le service.')));
       return false;
     }
 
@@ -95,7 +89,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'La localisation a été désactiver. Nous ne pouvos pas afficher votre position actuelle.'),
+                'La localisation a été désactivé. Nous ne pouvos pas afficher votre position actuelle.'),
           ),
         );
         return false;
@@ -105,7 +99,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Le service de location est désactiver en permance. Nous ne pouvons pas afficher votre position actuelle.'),
+              'Le service de location est désactivé en permance. Nous ne pouvons pas afficher votre position actuelle.'),
         ),
       );
       return false;
@@ -120,42 +114,25 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0x44000000),
+        backgroundColor: Colors.transparent,
         centerTitle: false,
-        title: const Text(''),
         actions: [
           if (_origin != null)
-            TextButton(
-              style: TextButton.styleFrom(
-                  foregroundColor: Colors.green,
-                  textStyle: const TextStyle(fontWeight: FontWeight.w600)),
-              onPressed: () => mapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              child: const Text("ORIGIN"),
+            // boutton pour zommer à la position actuelle
+            ButtonFocus(
+              mapController: mapController,
+              origin: _origin,
+              text: "ORIGIN",
+              colors: Colors.blue,
             ),
           if (_destination != null)
-            TextButton(
-              style: TextButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  textStyle: const TextStyle(fontWeight: FontWeight.w600)),
-              onPressed: () => mapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _destination!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              child: const Text('DEST'),
-            )
+            // boutton pour zommer vers la destination
+            ButtonFocus(
+              mapController: mapController,
+              origin: _origin,
+              text: "DEST",
+              colors: Colors.blue,
+            ),
         ],
       ),
       body: Stack(
@@ -185,10 +162,13 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 );
               });
             },
+            // ne montrer les markers que si il n'y a pas encore de position d'origine ou de destination
             markers: {
               if (_origin != null) _origin!,
               if (_destination != null) _destination!
             },
+
+            // lignes entre l'origine et la destination
             polylines: {
               if (_infoDirection != null)
                 Polyline(
@@ -202,73 +182,36 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             },
             onLongPress: _addMarker,
           ),
+
+          // on affiche la disstance entre les deux points
           if (_infoDirection != null)
-            Positioned(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
-                  horizontal: 12.0,
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.yellowAccent,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
-                        blurRadius: 6.0,
-                      )
-                    ]),
-                child: Text(
-                  '${_infoDirection!.totalDistance}, ${_infoDirection!.totalDuration}',
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+            PointsDistance(infoDirection: _infoDirection),
           Container(
             alignment: Alignment.bottomLeft,
             width: double.maxFinite,
             height: MediaQuery.of(context).size.height,
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              // const AppSearchBar(),
               const Expanded(child: SizedBox()),
               SizedBox(
                 width: double.maxFinite,
-                height: MediaQuery.of(context).size.height / 2.5,
-              ),
-            ]),
-          ),
-          Container(
-            alignment: Alignment.bottomLeft,
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height,
-            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              // const AppSearchBar(),
-              const Expanded(child: SizedBox()),
-              SizedBox(
-                width: double.maxFinite,
-                height: MediaQuery.of(context).size.height / 2.5,
+                height:
+                    MediaQuery.of(context).size.height / CONTENU_HEIGHT_DIVIDER,
                 child: ListView(
                   children: [
                     ...googleMapViewModels.buses.map(
                       (bus) => BusCard(
-                        name: "Arrêt : ${bus.arret}",
-                        heureOuverture: "heure d'arrivée : ${bus.heureArrivee}",
-                        dateOuverture:
+                        name: "arrêt : ${bus.arret}",
+                        heureArrivee: "heure d'arrivée : ${bus.heureArrivee}",
+                        prochaineArrivee:
                             "prochaine arrivée : ${bus.prochaineArrivee}",
-                        contact: "",
-                        image: bus.id,
-                        longlat: "",
-                        id: 1,
+                        id: bus.id,
+                        i: int.parse(bus.id),
                         onSelect: (int id) {
                           setState(() {
                             selectedBusId = id;
                           });
                         },
-                        isSelected: selectedBusId == bus['i'],
+                        isSelected: selectedBusId == int.parse(bus.id),
                       ),
                     ),
                     const SizedBox(
@@ -284,6 +227,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     );
   }
 
+// faire apparaitre des markers sur l'écran
   void _addMarker(LatLng pos) async {
     if (_origin == null || (_origin != null && _destination != null)) {
       setState(() {
@@ -315,5 +259,78 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         _infoDirection = directions;
       });
     }
+  }
+}
+
+class PointsDistance extends StatelessWidget {
+  const PointsDistance({
+    super.key,
+    required Directions? infoDirection,
+  }) : _infoDirection = infoDirection;
+
+  final Directions? _infoDirection;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 6.0,
+          horizontal: 12.0,
+        ),
+        decoration: BoxDecoration(
+            color: Colors.yellowAccent,
+            borderRadius: BorderRadius.circular(20.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 2),
+                blurRadius: 6.0,
+              )
+            ]),
+        child: Text(
+          '${_infoDirection!.totalDistance}, ${_infoDirection!.totalDuration}',
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// bouton pour zoomer sur la carte
+class ButtonFocus extends StatelessWidget {
+  const ButtonFocus({
+    super.key,
+    required this.mapController,
+    required Marker? origin,
+    required this.text,
+    this.colors = Colors.green,
+  }) : _origin = origin;
+
+  final GoogleMapController mapController;
+  final Marker? _origin;
+  final Color colors;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Text(text),
+      style: TextButton.styleFrom(
+          primary: colors,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600)),
+      onPressed: () => mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: _origin!.position,
+            zoom: FOCUS_ZOOM,
+            tilt: VITESSE_DE_DEPLACEMENT_ZOOM,
+          ),
+        ),
+      ),
+    );
   }
 }
