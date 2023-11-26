@@ -103,33 +103,41 @@ class SearchView extends StatelessWidget {
                         offset: Offset(0, 3))
                   ],
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: searchViewModels.query,
-                        onChanged: (newText) {
-                          searchViewModels.updateQuery(newText);
-                        },
-                        decoration: const InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.white,
-                          hintText: 'Rechercher votre arrêt ici...',
-                          hintStyle: TextStyle(
-                            fontSize: AppFontSize.large,
-                          ),
-                          labelStyle: TextStyle(
-                            fontSize: AppFontSize.large,
+                child: Container(
+                  width: 400,
+                  height: 150,
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        width: 400,
+                        height: 100,
+                        child: TextFormField(
+                          controller: searchViewModels.query,
+                          onChanged: (newText) {
+                            searchViewModels.updateQuery(newText);
+                          },
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.white,
+                            hintText: 'Rechercher votre arrêt ici...',
+                            hintStyle: TextStyle(
+                              fontSize: AppFontSize.large,
+                            ),
+                            labelStyle: TextStyle(
+                              fontSize: AppFontSize.large,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Icon(
-                      CupertinoIcons.search,
-                      size: 20,
-                      color: AppColors.primary,
-                    )
-                  ],
+                      const Icon(
+                        CupertinoIcons.search,
+                        size: 20,
+                        color: AppColors.primary,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

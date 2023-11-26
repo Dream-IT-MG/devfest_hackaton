@@ -37,18 +37,21 @@ class BusCard extends StatelessWidget {
           InkWell(
             onTap: () => onSelect(i),
             child: Row(children: [
-              Container(
-                alignment: Alignment.center,
-                color: Colors.blueGrey,
-                width: 50,
-                height: double.maxFinite,
-                child: Center(
-                  child: Text(
-                    id,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.blueGrey,
+                  width: 80,
+                  height: double.maxFinite,
+                  child: Center(
+                    child: Text(
+                      id,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ),

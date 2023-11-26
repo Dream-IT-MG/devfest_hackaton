@@ -15,38 +15,43 @@ class AnimatedBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
-      child: SizedBox(
-        height: 64,
-        width: 260,
-        child: Stack(
-          children: [
-            // Just a button no animation
-            // Let's fix that
-            RiveAnimation.asset(
-              "assets/animations/button.riv",
-              // Once we restart the app it shows the animation
-              controllers: [_btnAnimationColtroller],
-            ),
-            const Positioned.fill(
-              // But it's not center
-              top: 8,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(CupertinoIcons.arrow_right),
-                  SizedBox(width: 8),
-                  Text(
-                    "Bougez vous",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: press,
+          child: SizedBox(
+            height: 64,
+            width: 260,
+            child: Stack(
+              children: [
+                // Just a button no animation
+                // Let's fix that
+                RiveAnimation.asset(
+                  "assets/animations/button.riv",
+                  // Once we restart the app it shows the animation
+                  controllers: [_btnAnimationColtroller],
+                ),
+                const Positioned.fill(
+                  // But it's not center
+                  top: 8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.arrow_right),
+                      SizedBox(width: 8),
+                      Text(
+                        "Bougez vous",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
