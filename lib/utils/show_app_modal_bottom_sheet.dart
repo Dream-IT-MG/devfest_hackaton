@@ -18,6 +18,7 @@ Future<dynamic> showAppModalBottomSheet({
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
+          width: double.maxFinite,
           padding: const EdgeInsets.only(
             top: 15,
             left: 15,

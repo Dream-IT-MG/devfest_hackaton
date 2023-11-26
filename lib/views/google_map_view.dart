@@ -1,12 +1,19 @@
 // ignore_for_file: file_names
 
+import 'package:devfest_hackaton/models/itineraire.dart';
 import 'package:devfest_hackaton/repository/directions_repository.dart';
+import 'package:devfest_hackaton/utils/colors.dart';
+import 'package:devfest_hackaton/utils/fontsize.dart';
+import 'package:devfest_hackaton/utils/show_app_modal_bottom_sheet.dart';
 import 'package:devfest_hackaton/viewmodels/google_map_viewmodels.dart';
 import 'package:devfest_hackaton/widgets/bus_card.dart';
+import 'package:devfest_hackaton/widgets/text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:devfest_hackaton/models/directions_model.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 import '../models/directions_model.dart';
@@ -107,13 +114,188 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     return true;
   }
 
+  List itineraireIcon = [
+    [Iconsax.flash, "Le plus rapide"],
+    [Iconsax.clock, "Moyen"],
+    [CupertinoIcons.slowmo, "La plus lente"],
+  ];
+
   @override
   Widget build(BuildContext context) {
     GoogleMapViewModels googleMapViewModels = Provider.of(context);
+    Itineraire itineraire =
+        googleMapViewModels.itineraires[googleMapViewModels.selectedItineraire];
     return Scaffold(
       extendBodyBehindAppBar: true,
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              showAppModalBottomSheet(
+                  context: context,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.all(10),
+                              child: const Icon(
+                                Iconsax.clock,
+                                color: AppColors.secondary,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            AppText(
+                              "Durée totale du trajet : ${itineraire.heureTotalDuTrajet}",
+                              isBold: true,
+                              color: AppColors.secondary,
+                              fontSize: AppFontSize.large,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ...itineraire.listDesPointAParcourir.map(
+                          (point) => BusCard(
+                            name: "Arrêt à ${point.station.name}",
+                            heureArrivee:
+                                "Heure d'arrivée sur les lieux vers ${point.heureArriverSurLieu}",
+                            prochaineArrivee:
+                                "Prochaine passage de bus prévu vers ${point.station.heureArrive}",
+                            id: point.bus.id,
+                            i: int.parse(point.bus.id),
+                            onSelect: (int id) {
+                              setState(() {
+                                selectedBusId = id;
+                              });
+                            },
+                            isSelected:
+                                selectedBusId == int.parse(point.bus.id),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                      ],
+                    ),
+                  ));
+            },
+            backgroundColor: AppColors.secondary,
+            foregroundColor: AppColors.white,
+            child: const Icon(Iconsax.note),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              showAppModalBottomSheet(
+                  context: context,
+                  child: Consumer<GoogleMapViewModels>(
+                    builder: (context, model, child) => SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 30),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Icon(
+                                    itineraireIcon[googleMapViewModels
+                                        .selectedItineraire][0],
+                                    color: AppColors.secondary,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                AppText(
+                                  "Choix du trajet : ${itineraireIcon[googleMapViewModels.selectedItineraire][1]}",
+                                  isBold: true,
+                                  color: AppColors.secondary,
+                                  fontSize: AppFontSize.large,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ...List.generate(
+                                  itineraireIcon.length,
+                                  (index) => GestureDetector(
+                                    onTap: () {
+                                      googleMapViewModels
+                                          .updateSelecteItineraire(index);
+                                    },
+                                    child: Container(
+                                      width: 90,
+                                      height: 90,
+                                      decoration: BoxDecoration(
+                                        color: googleMapViewModels
+                                                    .selectedItineraire ==
+                                                index
+                                            ? Colors.white
+                                            : AppColors.primary,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(itineraireIcon[index][0],
+                                              color: googleMapViewModels
+                                                          .selectedItineraire ==
+                                                      index
+                                                  ? AppColors.primary
+                                                  : Colors.white),
+                                          AppText(itineraireIcon[index][1],
+                                              color: googleMapViewModels
+                                                          .selectedItineraire ==
+                                                      index
+                                                  ? AppColors.primary
+                                                  : Colors.white)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ));
+            },
+            backgroundColor: AppColors.secondary,
+            foregroundColor: AppColors.white,
+            child: const Icon(Iconsax.location),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       appBar: AppBar(
         elevation: 0,
+        bottomOpacity: 0,
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: false,
         actions: [
@@ -186,42 +368,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           // on affiche la disstance entre les deux points
           if (_infoDirection != null)
             PointsDistance(infoDirection: _infoDirection),
-          Container(
-            alignment: Alignment.bottomLeft,
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height,
-            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              const Expanded(child: SizedBox()),
-              SizedBox(
-                width: double.maxFinite,
-                height:
-                    MediaQuery.of(context).size.height / CONTENU_HEIGHT_DIVIDER,
-                child: ListView(
-                  children: [
-                    ...googleMapViewModels.buses.map(
-                      (bus) => BusCard(
-                        name: "arrêt : ${bus.arret}",
-                        heureArrivee: "heure d'arrivée : ${bus.heureArrivee}",
-                        prochaineArrivee:
-                            "prochaine arrivée : ${bus.prochaineArrivee}",
-                        id: bus.id,
-                        i: int.parse(bus.id),
-                        onSelect: (int id) {
-                          setState(() {
-                            selectedBusId = id;
-                          });
-                        },
-                        isSelected: selectedBusId == int.parse(bus.id),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                  ],
-                ),
-              ),
-            ]),
-          ),
         ],
       ),
     );
