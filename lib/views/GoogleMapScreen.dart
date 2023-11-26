@@ -1,8 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:devfest_hackaton/directions_repository.dart';
-import 'package:devfest_hackaton/utils/colors.dart';
-import 'package:dio/dio.dart';
+import 'package:devfest_hackaton/widgets/StoreCard.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,12 +18,36 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   // State
   bool isLoading = true;
+  int selectedId = 0;
 
   // Map Controller
   late GoogleMapController mapController;
   Marker? _origin = null;
   Marker? _destination = null;
   Directions? _info = null;
+  List busList = [
+    {
+      "i": 0,
+      "id": "139",
+      "arret": "Analakely",
+      "heureArrivee": "13h40",
+      "prochaineArrivee": "14h",
+    },
+    {
+      "i": 1,
+      "id": "127",
+      "arret": "Mahamasina",
+      "heureArrivee": "13h36",
+      "prochaineArrivee": "13h55",
+    },
+    {
+      "i": 2,
+      "id": "015",
+      "arret": "Ambohijatovo",
+      "heureArrivee": "13h55",
+      "prochaineArrivee": "13h59",
+    }
+  ];
 
   // Custom Marker
   BitmapDescriptor marketIcon = BitmapDescriptor.defaultMarker;
@@ -104,17 +127,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        onPressed: () {
-          // ...
-        },
-        child: const Icon(Icons.center_focus_strong),
-      ),
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Color(0x44000000),
         centerTitle: false,
-        title: const Text('Google map'),
+        title: const Text(''),
         actions: [
           if (_origin != null)
             TextButton(
@@ -158,9 +176,9 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             myLocationButtonEnabled: true,
             mapType: MapType.normal,
             initialCameraPosition: _initialPosition,
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               top: 50,
-              // bottom: MediaQuery.of(context).size.height / 2.5,
+              bottom: MediaQuery.of(context).size.height / 2.5,
               right: 20,
             ),
             onMapCreated: (GoogleMapController controller) {
@@ -233,6 +251,45 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               ),
             ]),
           ),
+          Container(
+            alignment: Alignment.bottomLeft,
+            width: double.maxFinite,
+            height: MediaQuery.of(context).size.height,
+            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              // const AppSearchBar(),
+              const Expanded(child: SizedBox()),
+              SizedBox(
+                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height / 2.5,
+                child: ListView(
+                  children: [
+                    ...busList.map(
+                      (bus) => StoreCard(
+                        name: "arrêt : ${bus['arret']}",
+                        heureOuverture:
+                            "heure d'arrivée : ${bus['heureArrivee']}",
+                        dateOuverture:
+                            "prochaine arrivée : ${bus['prochaineArrivee']}",
+                        contact: "",
+                        image: bus['id'],
+                        longlat: "",
+                        id: 1,
+                        onSelect: (int id) {
+                          setState(() {
+                            selectedId = id;
+                          });
+                        },
+                        isSelected: selectedId == bus['i'],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
         ],
       ),
     );
@@ -263,14 +320,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         );
       });
 
-      // get directions
-
       final directions = await DirectionRepository()
           .getDirections(origin: _origin!.position, destination: pos);
-      // return null;
-      print("_______________________________");
-      print(directions);
-      print("__________________etoooooooooooooooooooo______________");
       setState(() {
         _info = directions;
       });
