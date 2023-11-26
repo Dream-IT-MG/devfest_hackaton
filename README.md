@@ -1,6 +1,9 @@
 # devfest_hackaton
 
 A new Flutter project.
+BUS-NAY
+The main contain of our project is in lib/ folder
+and the test integrations are in test folder :)
 
 ## Getting Started
 
