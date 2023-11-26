@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 
-class StoreCard extends StatelessWidget {
-  const StoreCard(
+class BusCard extends StatelessWidget {
+  const BusCard(
       {super.key,
       this.isSelected = false,
       required this.name,
-      required this.heureOuverture,
-      required this.dateOuverture,
-      required this.contact,
-      required this.image,
-      required this.longlat,
-      required this.id,
-      required this.onSelect});
+      required this.i,
+      required this.heureArrivee,
+      required this.prochaineArrivee,
+      required this.onSelect,
+      required this.id});
 
   final bool isSelected;
   final String name;
-  final String heureOuverture;
-  final String dateOuverture;
-  final String contact;
-  final dynamic image;
-  final String longlat;
-  final int id;
+  final String heureArrivee;
+  final String prochaineArrivee;
+  final String id;
+  final int i;
   final void Function(int id) onSelect;
 
   @override
@@ -39,7 +35,7 @@ class StoreCard extends StatelessWidget {
       child: Stack(
         children: [
           InkWell(
-            onTap: () => onSelect(id),
+            onTap: () => onSelect(i),
             child: Row(children: [
               Container(
                 alignment: Alignment.center,
@@ -48,7 +44,7 @@ class StoreCard extends StatelessWidget {
                 height: double.maxFinite,
                 child: Center(
                   child: Text(
-                    image,
+                    name,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -73,34 +69,18 @@ class StoreCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        dateOuverture,
+                        prochaineArrivee,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
                         ),
                       ),
                       Text(
-                        heureOuverture,
+                        heureArrivee,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            contact,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          )
-                        ],
                       ),
                     ],
                   ),
