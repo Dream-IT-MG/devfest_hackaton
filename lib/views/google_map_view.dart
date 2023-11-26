@@ -168,9 +168,9 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                           (point) => BusCard(
                             name: "Arrêt à ${point.station.name}",
                             heureArrivee:
-                                "Heure d'arrivée sur les lieux vers ${point.heureArriverSurLieu}",
+                                "Heure d'arrivée vers ${point.heureArriverSurLieu}",
                             prochaineArrivee:
-                                "Prochaine passage de bus prévu vers ${point.station.heureArrive}",
+                                "Prochaine bus prévu vers ${point.station.heureArrive}",
                             id: point.bus.id,
                             i: int.parse(point.bus.id),
                             onSelect: (int id) {

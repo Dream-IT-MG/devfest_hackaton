@@ -41,7 +41,9 @@ class BusCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.blueGrey,
+                  decoration: BoxDecoration(
+                      color: Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(12)),
                   width: 80,
                   height: double.maxFinite,
                   child: Center(

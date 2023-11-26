@@ -1,8 +1,10 @@
 import 'package:devfest_hackaton/utils/colors.dart';
 import 'package:devfest_hackaton/utils/show_app_modal_bottom_sheet.dart';
+import 'package:devfest_hackaton/viewmodels/historique_viewmodels.dart';
 import 'package:devfest_hackaton/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class HistoriqueView extends StatelessWidget {
@@ -10,27 +12,33 @@ class HistoriqueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HistoriqueViewModels historiqueViewModels = Provider.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            TimelineTile(
-              isFirst: true,
-              isLast: false,
-              beforeLineStyle: const LineStyle(
-                color: AppColors.secondary,
-              ),
-              indicatorStyle: IndicatorStyle(
-                width: 30,
-                color: AppColors.divider,
-                iconStyle: IconStyle(
-                  iconData:
-                      true ? Icons.rocket_launch : Icons.star_rate_rounded,
-                  color: Colors.white,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 50,
                 ),
-              ),
-              endChild: true
-                  ? Container(
+                ...historiqueViewModels.trajetListe.map(
+                  (trajet) => TimelineTile(
+                    isFirst: trajet == historiqueViewModels.trajetListe.first,
+                    isLast: trajet == historiqueViewModels.trajetListe.last,
+                    beforeLineStyle: const LineStyle(
+                      color: AppColors.secondary,
+                    ),
+                    indicatorStyle: IndicatorStyle(
+                      width: 30,
+                      color: AppColors.primary,
+                      iconStyle: IconStyle(
+                        iconData: Icons.bus_alert,
+                        color: Colors.white,
+                      ),
+                    ),
+                    endChild: Container(
                       margin: const EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         color: AppColors.white,
@@ -38,25 +46,24 @@ class HistoriqueView extends StatelessWidget {
                       ),
                       child: Stack(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Center(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Icon(
-                                    // Iconsax.lock,
+                                  const Icon(
                                     Iconsax.global,
                                     size: 20,
-                                    color: AppColors.primary,
+                                    color: AppColors.textColor,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   AppText(
-                                    "Foooo",
+                                    "${trajet.depart} - ${trajet.arrive}\n(${trajet.fees})",
                                     isBold: true,
-                                    color: AppColors.primary,
+                                    color: AppColors.textColor,
                                   ),
                                 ],
                               ),
@@ -83,119 +90,12 @@ class HistoriqueView extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
-                  : Container(
-                      margin: const EdgeInsets.all(25),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Iconsax.calendar_1,
-                                size: 20,
-                                color: AppColors.primary,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              AppText(
-                                "18 Jun 2023",
-                                color: AppColors.primary,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Stack(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 140,
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            topRight: Radius.circular(20)),
-                                        color: Colors.white,
-                                        // image: DecorationImage(
-                                        //   fit: BoxFit.cover,
-                                        //   // image: (widget.image is String)
-                                        //   //     ? AssetImage(
-                                        //   //             "assets/images/${widget.image}")
-                                        //   //         as ImageProvider
-                                        //   //     : FileImage(widget.image),
-                                        // ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            const Icon(
-                                              // Iconsax.lock,
-                                              Iconsax.global,
-                                              size: 20,
-                                              color: AppColors.primary,
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            AppText(
-                                              "Fooo",
-                                              isBold: true,
-                                              color: AppColors.primary,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          // showModalPopup(context, widget.event);
-                                        },
-                                        color: AppColors.primary,
-                                        icon: const Icon(Iconsax.more),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-            )
-          ],
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
