@@ -1,21 +1,21 @@
 // ignore_for_file: file_names
 
-import 'package:devfest_hackaton/directions_repository.dart';
-import 'package:devfest_hackaton/widgets/StoreCard.dart';
+import 'package:devfest_hackaton/repository/directions_repository.dart';
+import 'package:devfest_hackaton/widgets/bus_card.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../directions_model.dart';
+import '../models/directions_model.dart';
 
-class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({super.key});
+class GoogleMapView extends StatefulWidget {
+  const GoogleMapView({super.key});
 
   @override
-  State<GoogleMapScreen> createState() => _GoogleMapScreenState();
+  State<GoogleMapView> createState() => _GoogleMapViewState();
 }
 
-class _GoogleMapScreenState extends State<GoogleMapScreen> {
+class _GoogleMapViewState extends State<GoogleMapView> {
   // State
   bool isLoading = true;
   int selectedId = 0;
@@ -264,7 +264,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                 child: ListView(
                   children: [
                     ...busList.map(
-                      (bus) => StoreCard(
+                      (bus) => BusCard(
                         name: "arrêt : ${bus['arret']}",
                         heureOuverture:
                             "heure d'arrivée : ${bus['heureArrivee']}",

@@ -5,21 +5,21 @@ class ResponsiveLayout extends StatelessWidget {
   final Widget desktopScaffold;
 
   const ResponsiveLayout({
-    super.key,
+    Key? key,
     required this.mobileScaffold,
     required this.desktopScaffold,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 1100) {
-          return mobileScaffold;
-        } else {
-          return desktopScaffold;
-        }
+        return _buildLayout(constraints.maxWidth);
       },
     );
+  }
+
+  Widget _buildLayout(double maxWidth) {
+    return maxWidth < 1100 ? mobileScaffold : desktopScaffold;
   }
 }

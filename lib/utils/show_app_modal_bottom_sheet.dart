@@ -11,21 +11,26 @@ Future<dynamic> showAppModalBottomSheet({
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     context: context,
-    builder: (context) => BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Container(
-        padding: const EdgeInsets.only(
-          top: 15,
-          left: 15,
-          right: 15,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
+    builder: (context) => Container(
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Container(
+          padding: const EdgeInsets.only(
+            top: 15,
+            left: 15,
+            right: 15,
           ),
-          color: AppColors.white.withOpacity(0.7),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+            color: AppColors.white.withOpacity(0.7),
+          ),
+          child: child,
         ),
-        child: child,
       ),
     ),
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class StoreCard extends StatelessWidget {
-  const StoreCard(
+class BusCard extends StatelessWidget {
+  const BusCard(
       {super.key,
       this.isSelected = false,
       required this.name,

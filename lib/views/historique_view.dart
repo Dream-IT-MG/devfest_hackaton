@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class HistoriqueScreen extends StatelessWidget {
-  const HistoriqueScreen({super.key});
+class HistoriqueView extends StatelessWidget {
+  const HistoriqueView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class HistoriqueScreen extends StatelessWidget {
               isFirst: true,
               isLast: false,
               beforeLineStyle: const LineStyle(
-                color: AppColors.darkSecondary,
+                color: AppColors.secondary,
               ),
               indicatorStyle: IndicatorStyle(
                 width: 30,
@@ -73,6 +73,7 @@ class HistoriqueScreen extends StatelessWidget {
                                 child: IconButton(
                                   onPressed: () {
                                     // showAppModalBottomSheet(ctx);
+                                    // ...
                                   },
                                   color: AppColors.primary,
                                   icon: const Icon(Iconsax.more),

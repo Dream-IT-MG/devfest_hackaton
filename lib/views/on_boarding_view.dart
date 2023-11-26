@@ -10,22 +10,23 @@ import 'package:page_transition/page_transition.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:rive/rive.dart';
 
-class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({super.key});
+const int DEFAULT_ANIMATION_DURATION = 5;
+
+class OnBoardingView extends StatefulWidget {
+  const OnBoardingView({super.key});
 
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  State<OnBoardingView> createState() => _OnBoardingViewState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingViewState extends State<OnBoardingView> {
   bool isSignInDialogShown = false;
   late RiveAnimationController _btnAnimationColtroller;
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   StateMachineController? controller1;
   SMIInput<double>? inputValue1;
   StateMachineController? controller2;
   SMIInput<bool>? inputValue2;
-  SMITrigger? _bump;
 
   void initState() {
     _btnAnimationColtroller = OneShotAnimation(
@@ -33,18 +34,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       autoplay: false,
     );
     startAnimation();
-    Timer.periodic(Duration(seconds: (1 * 3) + 2), (timer) {
+    Timer.periodic(const Duration(seconds: DEFAULT_ANIMATION_DURATION),
+        (timer) {
       startAnimation();
     });
     super.initState();
   }
 
+  // Start animation in periodic time
   Future<void> startAnimation() async {
     double i = 0;
     int transition = 1;
-    // while (i < 3) {
-    Future.delayed(Duration(seconds: 0), () {
-      // code to be executed after 2 seconds
+    Future.delayed(const Duration(seconds: 0), () {
       inputValue1?.change(i);
       i++;
     }).then(
@@ -94,8 +95,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               );
                               if (controller2 != null) {
                                 artboard.addController(controller2!);
-                                _bump = controller2!.findInput<bool>('Orange')
-                                    as SMITrigger;
                               }
                             },
                           ),
