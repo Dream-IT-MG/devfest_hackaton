@@ -44,7 +44,7 @@ class BusCard extends StatelessWidget {
                 height: double.maxFinite,
                 child: Center(
                   child: Text(
-                    name,
+                    id,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
