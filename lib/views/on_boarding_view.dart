@@ -201,13 +201,13 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                           children: [
                             const Spacer(),
                             const SizedBox(
-                              width: 260,
+                              width: double.maxFinite,
                               child: Column(
                                 children: [
                                   Text(
                                     "BUS-NAY",
                                     style: TextStyle(
-                                      fontSize: 60,
+                                      fontSize: 70,
                                       fontFamily: "Poppins",
                                       height: 1.2,
                                     ),
@@ -331,12 +331,12 @@ class SlideText extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Text(
                   description,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                   ),
