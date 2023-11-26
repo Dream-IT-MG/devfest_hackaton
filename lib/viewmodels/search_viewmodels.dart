@@ -1,4 +1,5 @@
 import 'package:devfest_hackaton/models/station.dart';
+import 'package:devfest_hackaton/services/station_services.dart';
 import 'package:flutter/material.dart';
 
 class SearchViewModels extends ChangeNotifier {
@@ -18,15 +19,8 @@ class SearchViewModels extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Station> getFilteredStations(String query, List<Station> stationsList) {
-    if (query.isEmpty) {
-      return stationsList;
-    } else {
-      return stationsList
-          .where(
-              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
+  List<Station> getFilteredStations() {
+    return StationService.getFilteredStations(query.text, stationsList);
   }
 
   void toggleStationNotified(Station station) {

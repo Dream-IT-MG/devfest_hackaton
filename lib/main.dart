@@ -1,3 +1,4 @@
+import 'package:devfest_hackaton/viewmodels/google_map_viewmodels.dart';
 import 'package:devfest_hackaton/viewmodels/search_viewmodels.dart';
 import 'package:devfest_hackaton/views/on_boarding_view.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SearchViewModels()),
+        ChangeNotifierProvider(create: (context) => GoogleMapViewModels()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
