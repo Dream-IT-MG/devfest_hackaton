@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:devfest_hackaton/constants.dart';
+import 'package:devfest_hackaton/screens/GoogleMapScreen.dart';
 import 'package:devfest_hackaton/utils/colors.dart';
 import 'package:devfest_hackaton/utils/rive_utils.dart';
 import 'package:devfest_hackaton/views/historique_screen.dart';
@@ -59,7 +60,7 @@ class _EntryPointState extends State<EntryPoint>
   }
 
   final List<Widget> pages = [
-    HistoriqueScreen(),
+    GoogleMapScreen(),
     SearchScreen(),
     HistoriqueScreen(),
     SearchScreen(),
